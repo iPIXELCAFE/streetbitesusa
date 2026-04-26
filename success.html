@@ -31,7 +31,7 @@ p{font-size:16px;color:var(--gray);margin-bottom:28px;line-height:1.6}
 </div>
 
 <script>
-const supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+const sbClient = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
 
 async function activate() {
   const params = new URLSearchParams(window.location.search);
@@ -39,10 +39,10 @@ async function activate() {
 
   if (!truckId) { showError('No truck ID found. Please contact support.'); return; }
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await sbClient.auth.getUser();
   if (!user) { showError('Session expired. Please log in and contact support.'); return; }
 
-  const { error } = await supabase
+  const { error } = await sbClient
     .from('trucks')
     .update({ status: 'active', updated_at: new Date().toISOString() })
     .eq('id', truckId)
