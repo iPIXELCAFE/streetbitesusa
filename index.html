@@ -282,7 +282,7 @@ footer{background:var(--charcoal);color:#A8A29E;padding:48px 32px 32px}
 <div class="toast" id="toast"></div>
 
 <script>
-const supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+const sbClient = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
 
 let allTrucks = [];
 let currentFilter = 'all';
@@ -308,7 +308,7 @@ function getColors(cuisine) {
 
 async function loadTrucks() {
   showSkeletons();
-  const { data: trucks, error } = await supabase
+  const { data: trucks, error } = await sbClient
     .from('trucks')
     .select('*, menu_items(*)')
     .eq('status', 'active')
