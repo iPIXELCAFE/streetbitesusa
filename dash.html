@@ -171,7 +171,7 @@ nav{background:#fff;border-bottom:1px solid var(--gray-mid);padding:0 32px;displ
 <div class="toast" id="toast"></div>
 
 <script>
-const supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+const sbClient = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
 const EMOJIS = ['🌮','🔥','🍔','🍜','🦞','🍕','🍦','🌱','🥞','🍛','🐟','🌶️','🥩','🥑','🧇','🍳','🌊','🏆','⭐','🚚','🍱','🥐','🍥','🎸'];
 
 let currentTruck = null;
@@ -179,12 +179,12 @@ let selectedEmoji = '🚚';
 let menuItems = [];
 
 async function init() {
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await sbClient.auth.getUser();
   if (!user) { window.location = 'login.html'; return; }
 
   document.getElementById('userName').textContent = user.user_metadata?.full_name || user.email;
 
-  const { data: truck } = await supabase
+  const { data: truck } = await sbClient
     .from('trucks')
     .select('*, menu_items(*)')
     .eq('owner_id', user.id)
@@ -269,7 +269,7 @@ async function saveTruckInfo() {
   const btn = document.getElementById('saveInfoBtn');
   btn.disabled = true; btn.textContent = 'Saving...';
 
-  const { error } = await supabase.from('trucks').update({
+  const { error } = await sbClient.from('trucks').update({
     name: document.getElementById('truckName').value.trim(),
     emoji: selectedEmoji,
     cuisine: document.getElementById('cuisine').value,
@@ -330,10 +330,10 @@ async function saveMenu() {
   btn.disabled = true; btn.textContent = 'Saving...';
 
   // Delete all existing, re-insert
-  await supabase.from('menu_items').delete().eq('truck_id', currentTruck.id);
+  await sbClient.from('menu_items').delete().eq('truck_id', currentTruck.id);
   const validItems = menuItems.filter(m => m.name.trim());
   if (validItems.length > 0) {
-    await supabase.from('menu_items').insert(validItems.map(m => ({ ...m, truck_id: currentTruck.id })));
+    await sbClient.from('menu_items').insert(validItems.map(m => ({ ...m, truck_id: currentTruck.id })));
   }
 
   btn.disabled = false; btn.textContent = 'Save Menu';
@@ -343,7 +343,7 @@ async function saveMenu() {
 function escHtml(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 async function logout() {
-  await supabase.auth.signOut();
+  await sbClient.auth.signOut();
   window.location = 'login.html';
 }
 
