@@ -61,10 +61,10 @@ nav{background:#fff;border-bottom:1px solid var(--gray-mid);padding:0 32px;displ
 </div>
 
 <script>
-const supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+const sbClient = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
 
 // If already logged in, redirect
-supabase.auth.getSession().then(({ data }) => {
+sbClient.auth.getSession().then(({ data }) => {
   if (data.session) window.location = 'dash.html';
 });
 
@@ -78,7 +78,7 @@ async function login() {
   if (!email || !pw) { err.textContent = 'Please fill in all fields.'; err.style.display = 'block'; return; }
 
   btn.disabled = true; btn.textContent = 'Logging in...';
-  const { error } = await supabase.auth.signInWithPassword({ email, password: pw });
+  const { error } = await sbClient.auth.signInWithPassword({ email, password: pw });
   btn.disabled = false; btn.textContent = 'Log In →';
 
   if (error) { err.textContent = error.message; err.style.display = 'block'; return; }
