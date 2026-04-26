@@ -10,7 +10,7 @@ const CONFIG = {
 
   // 2. Create a $29/month recurring product in Stripe, copy the Payment Link URL here
   //    https://dashboard.stripe.com/payment-links
-  STRIPE_PAYMENT_LINK: 'https://buy.stripe.com/YOUR_LINK_HERE',
+  STRIPE_PAYMENT_LINK: 'https://buy.stripe.com/cNiaEYclJ38UejL96Y8EM00',
 
   // 3. Your live site URL (no trailing slash) — update after Netlify deploy
   SITE_URL: 'https://streetbitesusa.com',
